@@ -4,5 +4,5 @@ import com.maibornwolff.ensit.bank.presentation.rest.account.AccountDto;
 
 import java.time.Instant;
 
-public record TransferDto(AccountDto from, AccountDto to, double amount, Instant createdAt) {
+public record TransferDto(String id, AccountDto from, AccountDto to, double amount, Instant createdAt) {
 }

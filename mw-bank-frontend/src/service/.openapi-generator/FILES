@@ -1,0 +1,15 @@
+.gitignore
+.npmignore
+api.ts
+api/account-rest-service-api.ts
+api/transfer-rest-service-api.ts
+base.ts
+common.ts
+configuration.ts
+dto/account-dto.ts
+dto/create-account-dto.ts
+dto/create-transfer-dto.ts
+dto/index.ts
+dto/transfer-dto.ts
+git_push.sh
+index.ts

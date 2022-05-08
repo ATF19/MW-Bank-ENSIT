@@ -35,10 +35,10 @@ public class TransferRestService {
         AccountDto account1 = new AccountDto(UUID.randomUUID().toString(), "John", "Doe", 1000., Instant.now(), Instant.now());
         AccountDto account2 = new AccountDto(UUID.randomUUID().toString(), "Marry", "Jane", 1500., Instant.now(), Instant.now());
         return List.of(
-                new TransferDto(account1, account2, 100., Instant.now()),
-                new TransferDto(account2, account1, 10., Instant.now()),
-                new TransferDto(account1, account2, 90., Instant.now()),
-                new TransferDto(account2, account1, 15., Instant.now())
+                new TransferDto(UUID.randomUUID().toString(), account1, account2, 100., Instant.now()),
+                new TransferDto(UUID.randomUUID().toString(), account2, account1, 10., Instant.now()),
+                new TransferDto(UUID.randomUUID().toString(), account1, account2, 90., Instant.now()),
+                new TransferDto(UUID.randomUUID().toString(), account2, account1, 15., Instant.now())
         );
     }
 }
