@@ -1,42 +1,46 @@
 package com.maibornwolff.ensit.bank.presentation.rest.account;
 
+import com.maibornwolff.ensit.bank.application.account.BankAccountAppService;
+import com.maibornwolff.ensit.bank.application.account.CreateBankAccountCommand;
+import com.maibornwolff.ensit.bank.domain.model.account.Balance;
+import com.maibornwolff.ensit.bank.domain.model.account.Name;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/account")
 public class AccountRestService {
 
     private static final Logger logger = Logger.getLogger(AccountRestService.class.getName());
+    private final BankAccountAppService bankAccountAppService;
+
+    public AccountRestService(BankAccountAppService bankAccountAppService) {
+        this.bankAccountAppService = bankAccountAppService;
+    }
 
     @GetMapping
     public ResponseEntity<List<AccountDto>> allAccounts() {
         logger.info("Retrieving all accounts.");
-        // TODO get real accounts
-        List<AccountDto> accountDtos = getDummyAccountDtos();
-        return ResponseEntity.ok(accountDtos);
+        List<AccountDto> dtos = bankAccountAppService.all()
+                .stream()
+                .map(account -> new AccountDto(account.getId().id().toString(), account.getName().firstName(),
+                        account.getName().lastName(), account.getBalance().balance(), Instant.now(), Instant.now()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody CreateAccountDto createAccountDto) {
-        logger.info("Creating account with the following: " + createAccountDto);
-        // TODO create an account
+    public ResponseEntity<AccountDto> createAccount(@RequestBody CreateAccountDto dto) {
+        logger.info("Creating account with the following: " + dto);
+        bankAccountAppService.createAccount(new CreateBankAccountCommand(new Name(dto.firstName(), dto.lastName()),
+                new Balance(dto.balance())));
         return ResponseEntity.ok().build();
-    }
-
-    private List<AccountDto> getDummyAccountDtos() {
-        return List.of(
-                new AccountDto(UUID.randomUUID().toString(), "John", "Doe", 1000., Instant.now(), Instant.now()),
-                new AccountDto(UUID.randomUUID().toString(), "Marry", "Jane", 1500., Instant.now(), Instant.now()),
-                new AccountDto(UUID.randomUUID().toString(), "Another", "User", 0., Instant.now(), Instant.now()),
-                new AccountDto(UUID.randomUUID().toString(), "Mr", "Bond", 10000., Instant.now(), Instant.now()),
-                new AccountDto(UUID.randomUUID().toString(), "Another", "John", 15., Instant.now(), Instant.now()),
-                new AccountDto(UUID.randomUUID().toString(), "John", "Again", 900., Instant.now(), Instant.now())
-        );
     }
 }
